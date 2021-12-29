@@ -1,0 +1,13 @@
+[package]
+name = "protozero"
+version = "0.0.0"
+authors = ["Kal Conley <kcconley@gmail.com>"]
+edition = "2021"
+description = "A minimalist protocol buffers decoder"
+readme = "README.md"
+repository = "https://github.com/kalcutter/protozero-rs"
+license = "MIT OR Apache-2.0"
+keywords = ["protobuf"]
+categories = ["no-std"]
+
+[dependencies]
