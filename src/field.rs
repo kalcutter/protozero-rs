@@ -857,12 +857,7 @@ where
 
     fn next(&mut self) -> Option<Self::Item> {
         match self {
-            Repeated::Value(None) => None,
-            Repeated::Value(Some(v)) => {
-                let v = *v;
-                *self = Self::Value(None);
-                Some(Ok(v))
-            }
+            Repeated::Value(v) => v.take().map(Ok),
             Repeated::Packed(p) => p.next(),
         }
     }
