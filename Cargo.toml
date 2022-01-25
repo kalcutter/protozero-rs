@@ -8,6 +8,6 @@ readme = "README.md"
 repository = "https://github.com/kalcutter/protozero-rs"
 license = "MIT OR Apache-2.0"
 keywords = ["protobuf"]
-categories = ["no-std"]
+categories = ["no-std", "parser-implementations"]
 
 [dependencies]
