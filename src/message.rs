@@ -1,6 +1,7 @@
 use crate::encoding::read_varint;
 use crate::field::{Field, FieldValue, Fixed32, Fixed64, LengthDelimited, Varint};
 use crate::Error;
+use core::iter::FusedIterator;
 
 /// A protobuf message.
 #[derive(Clone, Copy, Debug)]
@@ -95,3 +96,5 @@ impl<'a> Iterator for MessageFields<'a> {
         self.next_field().transpose()
     }
 }
+
+impl FusedIterator for MessageFields<'_> {}

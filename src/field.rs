@@ -2,6 +2,7 @@ use crate::encoding::read_varint;
 use crate::encoding::zigzag;
 use crate::message::Message;
 use crate::Error;
+use core::iter::FusedIterator;
 use core::str;
 
 /// Instance of a message field.
@@ -652,6 +653,8 @@ macro_rules! impl_packed {
                 }
             }
         }
+
+        impl FusedIterator for $name<'_> {}
     };
     ($(#[$meta:meta])* $name:ident, Fixed64, $get_fn:ident, $return_type:ty) => {
         $(#[$meta])*
@@ -674,6 +677,8 @@ macro_rules! impl_packed {
                 Some(Ok(Fixed64 { bytes }.$get_fn()))
             }
         }
+
+        impl FusedIterator for $name<'_> {}
     };
     ($(#[$meta:meta])* $name:ident, Fixed32, $get_fn:ident, $return_type:ty) => {
         $(#[$meta])*
@@ -696,6 +701,8 @@ macro_rules! impl_packed {
                 Some(Ok(Fixed32 { bytes }.$get_fn()))
             }
         }
+
+        impl FusedIterator for $name<'_> {}
     };
 }
 impl_packed!(
@@ -861,6 +868,13 @@ where
             Repeated::Packed(p) => p.next(),
         }
     }
+}
+
+impl<T, P> FusedIterator for Repeated<T, P>
+where
+    T: Copy,
+    P: Iterator<Item = Result<T, Error>> + FusedIterator,
+{
 }
 
 #[cfg(test)]
