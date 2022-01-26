@@ -10,64 +10,23 @@ pub fn read_varint(buf: &[u8]) -> Result<(&[u8], u64), Error> {
             return Ok((&buf[1..], byte as u64));
         }
     }
-    read_varint_1(buf)
-}
-
-#[allow(clippy::identity_op)]
-fn read_varint_1(buf: &[u8]) -> Result<(&[u8], u64), Error> {
-    if buf.len() >= VARINT_MAX_LEN {
-        debug_assert!(buf[0] > 0x7f);
-        let mut value = (buf[0] & 0x7f) as u64;
-        value |= ((buf[1] & 0x7f) as u64) << (1 * 7);
-        if buf[1] <= 0x7f {
-            return Ok((&buf[2..], value));
-        }
-        value |= ((buf[2] & 0x7f) as u64) << (2 * 7);
-        if buf[2] <= 0x7f {
-            return Ok((&buf[3..], value));
-        }
-        value |= ((buf[3] & 0x7f) as u64) << (3 * 7);
-        if buf[3] <= 0x7f {
-            return Ok((&buf[4..], value));
-        }
-        value |= ((buf[4] & 0x7f) as u64) << (4 * 7);
-        if buf[4] <= 0x7f {
-            return Ok((&buf[5..], value));
-        }
-        value |= ((buf[5] & 0x7f) as u64) << (5 * 7);
-        if buf[5] <= 0x7f {
-            return Ok((&buf[6..], value));
-        }
-        value |= ((buf[6] & 0x7f) as u64) << (6 * 7);
-        if buf[6] <= 0x7f {
-            return Ok((&buf[7..], value));
-        }
-        value |= ((buf[7] & 0x7f) as u64) << (7 * 7);
-        if buf[7] <= 0x7f {
-            return Ok((&buf[8..], value));
-        }
-        value |= ((buf[8] & 0x7f) as u64) << (8 * 7);
-        if buf[8] <= 0x7f {
-            return Ok((&buf[9..], value));
-        }
-        value |= ((buf[9] & 0x01) as u64) << (9 * 7);
-        if buf[9] <= 0x01 {
-            return Ok((&buf[10..], value));
-        }
-        Err(Error)
-    } else {
-        read_varint_loop(buf)
-    }
+    read_varint_loop(buf)
 }
 
 fn read_varint_loop(buf: &[u8]) -> Result<(&[u8], u64), Error> {
     let mut value = 0;
-    let mut index = 0;
-    while let Some(&byte) = buf.get(index) {
-        value |= ((byte & 0x7f) as u64) << (index * 7);
-        index += 1;
-        if byte <= 0x7f {
-            return Ok((&buf[index..], value));
+    for index in 0..VARINT_MAX_LEN {
+        match buf.get(index) {
+            Some(&byte) => {
+                value |= ((byte & 0x7f) as u64) << (index * 7);
+                if byte <= 0x7f {
+                    if index + 1 == VARINT_MAX_LEN && byte > 0x01 {
+                        break;
+                    }
+                    return Ok((&buf[index + 1..], value));
+                }
+            }
+            None => break,
         }
     }
     Err(Error)
