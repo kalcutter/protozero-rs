@@ -18,8 +18,8 @@ impl<'a> Message<'a> {
 
     /// Returns an iterator over fields of the message.
     #[inline]
-    pub fn fields(&self) -> MessageFields<'a> {
-        MessageFields { buf: self.buf }
+    pub fn fields(&self) -> Fields<'a> {
+        Fields { buf: self.buf }
     }
 }
 
@@ -34,11 +34,14 @@ impl<'a> From<&'a [u8]> for Message<'a> {
 ///
 /// This struct is returned from the [`fields`][Message::fields] method of [`Message`].
 #[derive(Debug)]
-pub struct MessageFields<'a> {
+pub struct Fields<'a> {
     buf: &'a [u8],
 }
 
-impl<'a> MessageFields<'a> {
+#[doc(hidden)]
+pub type MessageFields<'a> = Fields<'a>;
+
+impl<'a> Fields<'a> {
     fn next_field(&mut self) -> Result<Option<Field<'a>>, Error> {
         if self.buf.is_empty() {
             return Ok(None);
@@ -89,7 +92,7 @@ impl<'a> MessageFields<'a> {
     }
 }
 
-impl<'a> Iterator for MessageFields<'a> {
+impl<'a> Iterator for Fields<'a> {
     type Item = Result<Field<'a>, Error>;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -97,4 +100,4 @@ impl<'a> Iterator for MessageFields<'a> {
     }
 }
 
-impl FusedIterator for MessageFields<'_> {}
+impl FusedIterator for Fields<'_> {}
