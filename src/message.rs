@@ -42,7 +42,7 @@ pub struct Fields<'a> {
 pub type MessageFields<'a> = Fields<'a>;
 
 impl<'a> Fields<'a> {
-    fn next_field(&mut self) -> Result<Option<Field<'a>>, Error> {
+    fn try_next(&mut self) -> Result<Option<Field<'a>>, Error> {
         if self.buf.is_empty() {
             return Ok(None);
         }
@@ -96,7 +96,7 @@ impl<'a> Iterator for Fields<'a> {
     type Item = Result<Field<'a>, Error>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.next_field().transpose()
+        self.try_next().transpose()
     }
 }
 
