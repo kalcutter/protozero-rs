@@ -1,3 +1,6 @@
+#![allow(clippy::iter_nth_zero)]
+#![allow(clippy::single_match)]
+
 use protozero::{Error, Message};
 
 fn list_people(address_book: Message<'_>) -> Result<(), Error> {
@@ -92,7 +95,7 @@ fn main() -> io::Result<()> {
     let path = args.nth(1).unwrap();
     let buf = std::fs::read(path)?;
 
-    if let Err(_) = list_people(Message::new(&buf)) {
+    if list_people(Message::new(&buf)).is_err() {
         eprintln!("Failed to parse address book.");
         exit(1);
     }
