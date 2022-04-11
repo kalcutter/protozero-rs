@@ -1,14 +1,15 @@
 #![allow(clippy::iter_nth_zero)]
 #![allow(clippy::single_match)]
 
+use protozero::field::FieldValue;
 use protozero::{Error, Message};
 
 fn list_people(address_book: Message<'_>) -> Result<(), Error> {
     for field in address_book.fields() {
         let field = field?;
-        match field.number {
+        match (field.number, field.value) {
             // repeated Person people = 1;
-            1 => {
+            (1, FieldValue::LengthDelimited(f)) => {
                 let mut name: &str = "";
                 let mut id: i32 = 0;
                 let mut email: &str = "";
@@ -23,28 +24,30 @@ fn list_people(address_book: Message<'_>) -> Result<(), Error> {
                 }
                 let mut phones: Vec<PhoneNumber> = Vec::new();
 
-                for field in field.value.get_message()?.fields() {
+                for field in f.get_message().fields() {
                     let field = field?;
-                    match field.number {
+                    match (field.number, field.value) {
                         // string name = 1;
-                        1 => name = field.value.get_string()?,
+                        (1, FieldValue::LengthDelimited(f)) => name = f.get_string()?,
                         // int32 id = 2;
-                        2 => id = field.value.get_int32()?,
+                        (2, FieldValue::Varint(f)) => id = f.get_int32(),
                         // string email = 3;
-                        3 => email = field.value.get_string()?,
+                        (3, FieldValue::LengthDelimited(f)) => email = f.get_string()?,
                         // repeated PhoneNumber phones = 4;
-                        4 => {
+                        (4, FieldValue::LengthDelimited(f)) => {
                             let mut number: &str = "";
                             let mut type_: Option<PhoneType> = Some(PhoneType::Mobile);
 
-                            for field in field.value.get_message()?.fields() {
+                            for field in f.get_message().fields() {
                                 let field = field?;
-                                match field.number {
+                                match (field.number, field.value) {
                                     // string number = 1;
-                                    1 => number = field.value.get_string()?,
+                                    (1, FieldValue::LengthDelimited(f)) => {
+                                        number = f.get_string()?
+                                    }
                                     // PhoneType type = 2;
-                                    2 => {
-                                        type_ = match field.value.get_enum()? {
+                                    (2, FieldValue::Varint(f)) => {
+                                        type_ = match f.get_enum() {
                                             // MOBILE = 0;
                                             0 => Some(PhoneType::Mobile),
                                             // HOME = 1;
