@@ -3,6 +3,7 @@
 //! [Protocol Buffers]: https://developers.google.com/protocol-buffers/
 
 #![no_std]
+#![warn(missing_docs)]
 
 mod encoding;
 /// Protobuf fields and values.
