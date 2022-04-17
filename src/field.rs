@@ -857,7 +857,6 @@ pub enum Repeated<T, P> {
 
 impl<T, P> Iterator for Repeated<T, P>
 where
-    T: Copy,
     P: Iterator<Item = Result<T, Error>>,
 {
     type Item = Result<T, Error>;
@@ -870,10 +869,8 @@ where
     }
 }
 
-impl<T, P> FusedIterator for Repeated<T, P>
-where
-    T: Copy,
-    P: Iterator<Item = Result<T, Error>> + FusedIterator,
+impl<T, P> FusedIterator for Repeated<T, P> where
+    P: Iterator<Item = Result<T, Error>> + FusedIterator
 {
 }
 
