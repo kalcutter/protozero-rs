@@ -851,7 +851,9 @@ impl_packed!(
 /// An iterator over repeated values of a field.
 #[derive(Debug)]
 pub enum Repeated<T, P> {
+    /// A single value.
     Value(Option<T>),
+    /// An iterator over packed values.
     Packed(P),
 }
 
