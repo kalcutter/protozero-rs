@@ -851,10 +851,10 @@ impl_packed!(
 /// An iterator over repeated values of a field.
 #[derive(Debug)]
 pub enum Repeated<T, P> {
-    /// A single value.
-    Value(Option<T>),
     /// An iterator over packed values.
     Packed(P),
+    /// A single value.
+    Value(Option<T>),
 }
 
 impl<T, P> Iterator for Repeated<T, P>
@@ -865,8 +865,8 @@ where
 
     fn next(&mut self) -> Option<Self::Item> {
         match self {
-            Repeated::Value(v) => v.take().map(Ok),
             Repeated::Packed(p) => p.next(),
+            Repeated::Value(v) => v.take().map(Ok),
         }
     }
 }
