@@ -16,17 +16,19 @@ pub(crate) fn read_varint(buf: &[u8]) -> Result<(&[u8], u64), Error> {
 fn read_varint_loop(buf: &[u8]) -> Result<(&[u8], u64), Error> {
     let mut value = 0;
     for index in 0..VARINT_MAX_LEN {
-        match buf.get(index) {
-            Some(&byte) => {
-                value |= ((byte & 0x7f) as u64) << (index * 7);
-                if byte <= 0x7f {
-                    if index + 1 == VARINT_MAX_LEN && byte > 0x01 {
-                        break;
-                    }
-                    return Ok((&buf[index + 1..], value));
+        // Convince the compiler to remove slice panic checks.
+        #[allow(clippy::int_plus_one)]
+        if index < buf.len() && index + 1 <= buf.len() {
+            let byte = buf[index];
+            value |= ((byte & 0x7f) as u64) << (index * 7);
+            if byte <= 0x7f {
+                if index + 1 == VARINT_MAX_LEN && byte > 0x01 {
+                    break;
                 }
+                return Ok((&buf[index + 1..], value));
             }
-            None => break,
+        } else {
+            break;
         }
     }
     Err(Error)
