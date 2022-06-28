@@ -13,23 +13,22 @@ pub(crate) fn read_varint(buf: &[u8]) -> Result<(&[u8], u64), Error> {
     read_varint_loop(buf)
 }
 
+#[allow(clippy::int_plus_one)]
 fn read_varint_loop(buf: &[u8]) -> Result<(&[u8], u64), Error> {
+    let mut index = 0;
     let mut value = 0;
-    for index in 0..VARINT_MAX_LEN {
-        // Convince the compiler to remove slice panic checks.
-        #[allow(clippy::int_plus_one)]
-        if index < buf.len() && index + 1 <= buf.len() {
-            let byte = buf[index];
-            value |= ((byte & 0x7f) as u64) << (index * 7);
-            if byte <= 0x7f {
-                if index + 1 == VARINT_MAX_LEN && byte > 0x01 {
-                    break;
-                }
-                return Ok((&buf[index + 1..], value));
+    // Compare `index + 1` in the conditional. This lets the compiler optimize out bounds checks in
+    // the loop body.
+    while index < VARINT_MAX_LEN && index + 1 <= buf.len() {
+        let byte = buf[index];
+        value |= ((byte & 0x7f) as u64) << (index * 7);
+        if byte <= 0x7f {
+            if index + 1 == VARINT_MAX_LEN && byte > 0x01 {
+                break;
             }
-        } else {
-            break;
+            return Ok((&buf[index + 1..], value));
         }
+        index += 1;
     }
     Err(Error)
 }
