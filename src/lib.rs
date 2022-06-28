@@ -14,7 +14,7 @@ pub mod field;
 pub mod message;
 
 /// The error type.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Eq, PartialEq)]
 pub struct Error;
 
 pub use message::Message;
