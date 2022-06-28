@@ -1,10 +1,10 @@
 use crate::Error;
 
-pub const VARINT_MAX_LEN: usize = 10;
+pub(crate) const VARINT_MAX_LEN: usize = 10;
 
 /// Decodes a varint from a slice, returning the remainder of the slice and the value.
 #[inline]
-pub fn read_varint(buf: &[u8]) -> Result<(&[u8], u64), Error> {
+pub(crate) fn read_varint(buf: &[u8]) -> Result<(&[u8], u64), Error> {
     if let Some(&byte) = buf.get(0) {
         if byte <= 0x7f {
             return Ok((&buf[1..], byte as u64));
@@ -32,14 +32,14 @@ fn read_varint_loop(buf: &[u8]) -> Result<(&[u8], u64), Error> {
     Err(Error)
 }
 
-pub mod zigzag {
+pub(crate) mod zigzag {
     #[inline]
-    pub fn decode_32(n: u32) -> i32 {
+    pub(crate) fn decode_32(n: u32) -> i32 {
         (n >> 1) as i32 ^ -((n & 1) as i32)
     }
 
     #[inline]
-    pub fn decode_64(n: u64) -> i64 {
+    pub(crate) fn decode_64(n: u64) -> i64 {
         (n >> 1) as i64 ^ -((n & 1) as i64)
     }
 }

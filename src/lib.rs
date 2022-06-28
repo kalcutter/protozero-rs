@@ -4,6 +4,7 @@
 
 #![no_std]
 #![warn(missing_docs)]
+#![warn(unreachable_pub)]
 
 mod encoding;
 /// Protobuf fields and values.
