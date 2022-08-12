@@ -232,7 +232,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_bool(&self) -> Result<Repeated<bool, PackedBool<'_>>, Error> {
+    pub fn get_repeated_bool(&self) -> Result<Repeated<bool, PackedBool<'a>>, Error> {
         match self {
             FieldValue::Varint(f) => Ok(Repeated::Value(Some(f.get_bool()))),
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_bool())),
@@ -244,7 +244,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_enum(&self) -> Result<Repeated<i32, PackedEnum<'_>>, Error> {
+    pub fn get_repeated_enum(&self) -> Result<Repeated<i32, PackedEnum<'a>>, Error> {
         match self {
             FieldValue::Varint(f) => Ok(Repeated::Value(Some(f.get_enum()))),
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_enum())),
@@ -256,7 +256,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_int32(&self) -> Result<Repeated<i32, PackedInt32<'_>>, Error> {
+    pub fn get_repeated_int32(&self) -> Result<Repeated<i32, PackedInt32<'a>>, Error> {
         match self {
             FieldValue::Varint(f) => Ok(Repeated::Value(Some(f.get_int32()))),
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_int32())),
@@ -268,7 +268,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_int64(&self) -> Result<Repeated<i64, PackedInt64<'_>>, Error> {
+    pub fn get_repeated_int64(&self) -> Result<Repeated<i64, PackedInt64<'a>>, Error> {
         match self {
             FieldValue::Varint(f) => Ok(Repeated::Value(Some(f.get_int64()))),
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_int64())),
@@ -280,7 +280,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_sint32(&self) -> Result<Repeated<i32, PackedSint32<'_>>, Error> {
+    pub fn get_repeated_sint32(&self) -> Result<Repeated<i32, PackedSint32<'a>>, Error> {
         match self {
             FieldValue::Varint(f) => Ok(Repeated::Value(Some(f.get_sint32()))),
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_sint32())),
@@ -292,7 +292,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_sint64(&self) -> Result<Repeated<i64, PackedSint64<'_>>, Error> {
+    pub fn get_repeated_sint64(&self) -> Result<Repeated<i64, PackedSint64<'a>>, Error> {
         match self {
             FieldValue::Varint(f) => Ok(Repeated::Value(Some(f.get_sint64()))),
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_sint64())),
@@ -304,7 +304,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_uint32(&self) -> Result<Repeated<u32, PackedUint32<'_>>, Error> {
+    pub fn get_repeated_uint32(&self) -> Result<Repeated<u32, PackedUint32<'a>>, Error> {
         match self {
             FieldValue::Varint(f) => Ok(Repeated::Value(Some(f.get_uint32()))),
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_uint32())),
@@ -316,7 +316,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_uint64(&self) -> Result<Repeated<u64, PackedUint64<'_>>, Error> {
+    pub fn get_repeated_uint64(&self) -> Result<Repeated<u64, PackedUint64<'a>>, Error> {
         match self {
             FieldValue::Varint(f) => Ok(Repeated::Value(Some(f.get_uint64()))),
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_uint64())),
@@ -328,7 +328,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_fixed64(&self) -> Result<Repeated<u64, PackedFixed64<'_>>, Error> {
+    pub fn get_repeated_fixed64(&self) -> Result<Repeated<u64, PackedFixed64<'a>>, Error> {
         match self {
             FieldValue::Fixed64(f) => Ok(Repeated::Value(Some(f.get_fixed64()))),
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_fixed64())),
@@ -340,7 +340,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_sfixed64(&self) -> Result<Repeated<i64, PackedSfixed64<'_>>, Error> {
+    pub fn get_repeated_sfixed64(&self) -> Result<Repeated<i64, PackedSfixed64<'a>>, Error> {
         match self {
             FieldValue::Fixed64(f) => Ok(Repeated::Value(Some(f.get_sfixed64()))),
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_sfixed64())),
@@ -352,7 +352,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_double(&self) -> Result<Repeated<f64, PackedDouble<'_>>, Error> {
+    pub fn get_repeated_double(&self) -> Result<Repeated<f64, PackedDouble<'a>>, Error> {
         match self {
             FieldValue::Fixed64(f) => Ok(Repeated::Value(Some(f.get_double()))),
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_double())),
@@ -364,7 +364,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_fixed32(&self) -> Result<Repeated<u32, PackedFixed32<'_>>, Error> {
+    pub fn get_repeated_fixed32(&self) -> Result<Repeated<u32, PackedFixed32<'a>>, Error> {
         match self {
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_fixed32())),
             FieldValue::Fixed32(f) => Ok(Repeated::Value(Some(f.get_fixed32()))),
@@ -376,7 +376,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_sfixed32(&self) -> Result<Repeated<i32, PackedSfixed32<'_>>, Error> {
+    pub fn get_repeated_sfixed32(&self) -> Result<Repeated<i32, PackedSfixed32<'a>>, Error> {
         match self {
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_sfixed32())),
             FieldValue::Fixed32(f) => Ok(Repeated::Value(Some(f.get_sfixed32()))),
@@ -388,7 +388,7 @@ impl<'a> FieldValue<'a> {
     ///
     /// If the wire type is not compatible, `Err` is returned.
     #[inline]
-    pub fn get_repeated_float(&self) -> Result<Repeated<f32, PackedFloat<'_>>, Error> {
+    pub fn get_repeated_float(&self) -> Result<Repeated<f32, PackedFloat<'a>>, Error> {
         match self {
             FieldValue::LengthDelimited(f) => Ok(Repeated::Packed(f.get_packed_float())),
             FieldValue::Fixed32(f) => Ok(Repeated::Value(Some(f.get_float()))),
