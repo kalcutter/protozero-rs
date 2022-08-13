@@ -1,6 +1,6 @@
 [package]
 name = "protozero"
-version = "0.1.6"
+version = "0.1.7"
 authors = ["Kal Conley <kcconley@gmail.com>"]
 edition = "2021"
 description = "A minimalist protocol buffers decoder"
