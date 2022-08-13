@@ -33,7 +33,7 @@ impl<'a> From<&'a [u8]> for Message<'a> {
 /// An iterator over fields of a message.
 ///
 /// This struct is returned from the [`fields`][Message::fields] method of [`Message`].
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Fields<'a> {
     buf: &'a [u8],
 }

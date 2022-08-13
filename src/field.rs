@@ -633,7 +633,7 @@ impl Varint {
 macro_rules! impl_packed {
     ($(#[$meta:meta])* $name:ident, Varint, $get_fn:ident, $return_type:ty) => {
         $(#[$meta])*
-        #[derive(Debug, Default)]
+        #[derive(Clone, Debug, Default)]
         pub struct $name<'a> {
             buf: &'a [u8],
         }
@@ -659,7 +659,7 @@ macro_rules! impl_packed {
     };
     ($(#[$meta:meta])* $name:ident, Fixed64, $get_fn:ident, $return_type:ty) => {
         $(#[$meta])*
-        #[derive(Debug, Default)]
+        #[derive(Clone, Debug, Default)]
         pub struct $name<'a> {
             buf: &'a [u8],
         }
@@ -684,7 +684,7 @@ macro_rules! impl_packed {
     };
     ($(#[$meta:meta])* $name:ident, Fixed32, $get_fn:ident, $return_type:ty) => {
         $(#[$meta])*
-        #[derive(Debug, Default)]
+        #[derive(Clone, Debug, Default)]
         pub struct $name<'a> {
             buf: &'a [u8],
         }
@@ -852,7 +852,7 @@ impl_packed!(
 );
 
 /// An iterator over repeated values of a field.
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Repeated<T, P> {
     /// An iterator over packed values.
     Packed(P),
