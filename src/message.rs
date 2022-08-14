@@ -52,7 +52,7 @@ impl<'a> Fields<'a> {
             // Field number 0 is illegal.
             return Err(Error);
         }
-        let wire_type = tag as u8 & 0x7;
+        let wire_type = tag & 0x7;
         let (buf, value) = match wire_type {
             0 => {
                 let (buf, value) = read_varint(buf)?;
